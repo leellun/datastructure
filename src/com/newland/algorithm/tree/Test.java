@@ -1,6 +1,13 @@
 package com.newland.algorithm.tree;
 
 public class Test {
+    /**
+     *                         1
+     *               4-                 -2
+     *                   -5          3-     -6
+     *                      -8                  -7
+     * @param args
+     */
     public static void main(String[] args) {
 //创建一个二叉树
         Node node8 = new Node(8, null, null);
@@ -15,7 +22,7 @@ public class Test {
 
         Node node1 = new Node(1,node4,node2);
 
-        BinaryTree<Integer>  btree = new LinkedBinaryTree(node1);
+        LinkedBinaryTree<Integer>  btree = new LinkedBinaryTree(node1);
         //BinaryTree  btree = new LinkedBinaryTree();
 
         //判断二叉树是否为空
@@ -58,5 +65,6 @@ public class Test {
 
         //二叉树的结点数量
         System.out.println(btree.size());
+        btree.test3();
     }
 }
