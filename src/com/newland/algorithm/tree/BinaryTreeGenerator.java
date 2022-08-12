@@ -6,16 +6,17 @@ import java.util.Deque;
 
 /**
  *
+ * 二叉树推演
  * Author: leell
  * Date: 2022/8/10 16:19:31
  */
-public class BinaryTreeTest {
+public class BinaryTreeGenerator {
 
     public static void main(String[] args) {
         System.out.println("通过先序中序获取后续遍历：");
-        new BinaryTreeTest().postBinaryTree(new int[]{1, 4, 5, 8, 2, 3, 6, 7}, new int[]{4, 5, 8, 1, 3, 2, 6, 7});
+        new BinaryTreeGenerator().postBinaryTree(new int[]{1, 4, 5, 8, 2, 3, 6, 7}, new int[]{4, 5, 8, 1, 3, 2, 6, 7});
         System.out.println("通过中序后续获取先序遍历：");
-        new BinaryTreeTest().preBinnaryTree(new int[]{4, 5, 8, 1, 3, 2, 6, 7}, new int[]{8, 5, 4, 3, 7, 6, 2, 1});
+        new BinaryTreeGenerator().preBinnaryTree(new int[]{4, 5, 8, 1, 3, 2, 6, 7}, new int[]{8, 5, 4, 3, 7, 6, 2, 1});
     }
 
     public void postBinaryTree(int[] preArr, int[] inArr) {
@@ -26,7 +27,8 @@ public class BinaryTreeTest {
 
     /**
      * 通过先序中序得出后续
-     *
+     * 思想：通过先序节点确定一棵树的顶部，然后通过找到该节点在中序中的位置，然后拆分二叉树。
+     * 序序排列
      * @param preArr   先序队列
      * @param preStart
      * @param preEnd
