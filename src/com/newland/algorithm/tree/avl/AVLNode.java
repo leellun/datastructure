@@ -1,4 +1,4 @@
-package com.newland.algorithm.avl;
+package com.newland.algorithm.tree.avl;
 
 public class AVLNode<T extends Comparable> {
     public AVLNode<T> left;

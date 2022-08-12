@@ -1,4 +1,4 @@
-package com.newland.algorithm.tree;
+package com.newland.algorithm.tree.bianli;
 
 public class Node {
     Object value;

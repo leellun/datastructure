@@ -1,4 +1,4 @@
-package com.newland.algorithm.avl;
+package com.newland.algorithm.tree.avl;
 
 /**
  * 平衡二叉树
