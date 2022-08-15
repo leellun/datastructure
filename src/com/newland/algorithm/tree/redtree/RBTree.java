@@ -1,10 +1,17 @@
 package com.newland.algorithm.tree.redtree;
 
+import com.newland.algorithm.tree.bianli.Node;
+
+import java.util.Deque;
+import java.util.LinkedList;
+
 public class RBTree<T extends Comparable> {
     private RBTreeNode<T> root;
 
     public void addNode(T value) {
         RBTreeNode<T> node = new RBTreeNode<>(value);
+        node.makeRed();
+        addNode(node);
     }
 
     private T addNode(RBTreeNode<T> node) {
@@ -31,16 +38,84 @@ public class RBTree<T extends Comparable> {
         RBTreeNode<T> parent = node.parent;
         while (parent != null && parent.red) {
             RBTreeNode<T> uncle = getUncle(node);
+            RBTreeNode<T> ancestor = parent.parent;
+            if (ancestor == null) {
+                break;
+            }
+            if (uncle != null && uncle.isRed()) {
+
+            }
             if (uncle == null) {
-                
-            } else {
-                parent.makeBlack();
-                uncle.makeBlack();
-                parent.parent.makeRed();
-                node = parent;
-                parent = parent.parent;
+                if (parent == ancestor.left) {
+                    //非直线的三点
+                    boolean isRight = node == parent.right;
+                    if (isRight) {
+                        rotateLeft(parent);
+                    }
+                    rotateRight(ancestor);
+                    if (isRight) {
+                        node.makeBlack();
+                    } else {
+                        parent.makeBlack();
+                    }
+                } else {
+                    boolean isLeft = node == parent.left;
+                    if (isLeft) {
+                        rotateRight(parent);
+                    }
+                    rotateLeft(ancestor);
+                    if (isLeft) {
+                        node.makeBlack();
+                    } else {
+                        parent.makeBlack();
+                    }
+                }
+                ancestor.makeRed();
+                break;
+            } else {//uncle 是红色 因为父节点是红色所以uncle一定是红色
+                if (!uncle.isRed()) {//ancestor节点则为黑色，所以需要进行旋转才能平衡红黑
+                    if (parent == ancestor.left) {
+                        //非直线的三点
+                        boolean isRight = node == parent.right;
+                        if (isRight) {
+                            rotateLeft(parent);
+                        }
+                        rotateRight(ancestor);
+                        if (isRight) {
+                            node.makeBlack();
+                        } else {
+                            parent.makeBlack();
+                        }
+                        if(parent==root){
+                            parent.right.makeRed();
+                        }
+                    } else {
+                        boolean isLeft = node == parent.left;
+                        if (isLeft) {
+                            rotateRight(parent);
+                        }
+                        rotateLeft(ancestor);
+                        if (isLeft) {
+                            node.makeBlack();
+                        } else {
+                            parent.makeBlack();
+                        }
+                        if(parent==root){
+                            parent.left.makeRed();
+                        }
+                    }
+
+                } else {
+                    parent.makeBlack();
+                    uncle.makeBlack();
+                    ancestor.makeRed();
+                    node = ancestor;
+                    parent = node.parent;
+                }
             }
         }
+        root.makeBlack();
+        root.parent = null;
     }
 
     private RBTreeNode<T> getUncle(RBTreeNode<T> node) {
@@ -52,6 +127,40 @@ public class RBTree<T extends Comparable> {
         } else {
             return ancestor.left;
         }
+    }
+
+    /**
+     * 左旋转   左下
+     */
+    private void rotateLeft(RBTreeNode<T> node) {
+        RBTreeNode<T> child = node.right;
+        RBTreeNode<T> parent = node.parent;
+        if (parent == null) {
+            this.root = child;
+        } else {
+            parent.right = child;
+        }
+        node.right = child.left;
+        node.parent = child;
+        child.parent = parent;
+        child.left = node;
+    }
+
+    /**
+     * 右旋转   右下
+     */
+    private void rotateRight(RBTreeNode<T> node) {
+        RBTreeNode<T> child = node.left;
+        RBTreeNode<T> parent = node.parent;
+        if (parent == null) {
+            this.root = child;
+        } else {
+            parent.left = child;
+        }
+        node.left = child.right;
+        node.parent = child;
+        child.parent = parent;
+        child.right = node;
     }
 
     /**
@@ -77,5 +186,32 @@ public class RBTree<T extends Comparable> {
             }
         }
         return root;
+    }
+
+    public void test3() {
+        Deque<RBTreeNode> queue = new LinkedList<>();
+        RBTreeNode currentNode = root;
+        while (currentNode != null || !queue.isEmpty()) {
+            RBTreeNode temp = currentNode;
+            while (temp != null) {
+                queue.push(temp);
+                System.out.print(temp.value+"(" + temp.isRed()+")-");
+                temp = temp.left;
+            }
+            RBTreeNode top = queue.poll();
+            currentNode = top.right;
+        }
+    }
+
+    public static void main(String[] args) {
+        RBTree<Integer> brtree = new RBTree<>();
+        for (int i = 10; i >= 1; i--) {
+            if (i == 1) {
+                System.out.println();
+            }
+            brtree.addNode(i);
+            brtree.test3();
+            System.out.println();
+        }
     }
 }

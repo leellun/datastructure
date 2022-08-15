@@ -1,5 +1,8 @@
 package com.newland.algorithm.tree.red;
 
+import java.util.Deque;
+import java.util.LinkedList;
+
 public class RBTree<T extends Comparable<T>> {
     private final RBTreeNode<T> root;
     //node number
@@ -513,26 +516,27 @@ public class RBTree<T extends Comparable<T>> {
             }
         }
     }
-
+    public void test3() {
+        Deque<RBTreeNode> queue = new LinkedList<>();
+        RBTreeNode currentNode = root;
+        while (currentNode != null || !queue.isEmpty()) {
+            RBTreeNode temp = currentNode;
+            while (temp != null) {
+                queue.push(temp);
+                System.out.print(temp.getValue() + "-");
+                temp = temp.getLeft();
+            }
+            RBTreeNode top = queue.poll();
+            currentNode = top.getRight();
+        }
+    }
 
     public static void main(String[] args) {
         RBTree<String> bst = new RBTree<String>();
-        bst.addNode("d");
-        bst.addNode("d");
-        bst.addNode("c");
-        bst.addNode("c");
-        bst.addNode("b");
-        bst.addNode("f");
+        for(int i=10;i>=1;i--){
+            bst.addNode(i+"");
+        }
 
-        bst.addNode("a");
-        bst.addNode("e");
-
-        bst.addNode("g");
-        bst.addNode("h");
-
-
-        bst.remove("c");
-
-        bst.printTree(bst.getRoot());
+        bst.test3();
     }
 }
