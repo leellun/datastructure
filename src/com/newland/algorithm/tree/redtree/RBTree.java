@@ -1,7 +1,5 @@
 package com.newland.algorithm.tree.redtree;
 
-import com.newland.algorithm.tree.bianli.Node;
-
 import java.util.Deque;
 import java.util.LinkedList;
 
@@ -42,10 +40,7 @@ public class RBTree<T extends Comparable> {
             if (ancestor == null) {
                 break;
             }
-            if (uncle != null && uncle.isRed()) {
-
-            }
-            if (uncle == null) {
+            if (uncle == null || uncle.isBlack()) {//ancestor节点则为黑色，所以需要进行旋转才能平衡红黑
                 if (parent == ancestor.left) {
                     //非直线的三点
                     boolean isRight = node == parent.right;
@@ -70,48 +65,18 @@ public class RBTree<T extends Comparable> {
                         parent.makeBlack();
                     }
                 }
-                ancestor.makeRed();
-                break;
-            } else {//uncle 是红色 因为父节点是红色所以uncle一定是红色
-                if (!uncle.isRed()) {//ancestor节点则为黑色，所以需要进行旋转才能平衡红黑
-                    if (parent == ancestor.left) {
-                        //非直线的三点
-                        boolean isRight = node == parent.right;
-                        if (isRight) {
-                            rotateLeft(parent);
-                        }
-                        rotateRight(ancestor);
-                        if (isRight) {
-                            node.makeBlack();
-                        } else {
-                            parent.makeBlack();
-                        }
-                        if(parent==root){
-                            parent.right.makeRed();
-                        }
-                    } else {
-                        boolean isLeft = node == parent.left;
-                        if (isLeft) {
-                            rotateRight(parent);
-                        }
-                        rotateLeft(ancestor);
-                        if (isLeft) {
-                            node.makeBlack();
-                        } else {
-                            parent.makeBlack();
-                        }
-                        if(parent==root){
-                            parent.left.makeRed();
-                        }
-                    }
-
-                } else {
-                    parent.makeBlack();
-                    uncle.makeBlack();
+                if (uncle == null) {
                     ancestor.makeRed();
-                    node = ancestor;
-                    parent = node.parent;
+                    break;
+                } else {
+                    uncle.parent.makeRed();
                 }
+            } else {//uncle 是红色 因为父节点是红色所以uncle一定是红色
+                parent.makeBlack();
+                uncle.makeBlack();
+                ancestor.makeRed();
+                node = ancestor;
+                parent = node.parent;
             }
         }
         root.makeBlack();
@@ -188,14 +153,14 @@ public class RBTree<T extends Comparable> {
         return root;
     }
 
-    public void test3() {
+    public void preOrderByStack() {
         Deque<RBTreeNode> queue = new LinkedList<>();
         RBTreeNode currentNode = root;
         while (currentNode != null || !queue.isEmpty()) {
             RBTreeNode temp = currentNode;
             while (temp != null) {
                 queue.push(temp);
-                System.out.print(temp.value+"(" + temp.isRed()+")-");
+                System.out.print(temp.value + "(" + temp.isRed() + ")-");
                 temp = temp.left;
             }
             RBTreeNode top = queue.poll();
@@ -210,7 +175,7 @@ public class RBTree<T extends Comparable> {
                 System.out.println();
             }
             brtree.addNode(i);
-            brtree.test3();
+            brtree.preOrderByStack();
             System.out.println();
         }
     }

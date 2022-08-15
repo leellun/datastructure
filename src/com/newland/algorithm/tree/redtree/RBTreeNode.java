@@ -35,6 +35,10 @@ public class RBTreeNode<T extends Comparable> {
         return red;
     }
 
+    public boolean isBlack() {
+        return !red;
+    }
+
     public void makeBlack() {
         red = false;
     }
